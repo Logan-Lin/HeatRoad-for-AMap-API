@@ -25,6 +25,31 @@ function valueToRgbStr(value) {
 
 let map = new AMap.Map('container');
 
+function drawPolyline(context, path, color, retina) {
+    function coor2Pos(lnglat) {
+        let pos = map.lngLatToContainer(lnglat);
+        if (retina) {
+            pos = pos.multiplyBy(2);
+        }
+        return pos
+    }
+    let pos = [];
+    path.forEach(function(point) {
+        pos.push(coor2Pos(point));
+    })
+
+    context.lineWidth = 4;
+    // console.log(color);
+    context.strokeStyle = color;
+    context.moveTo(pos[0].x, pos[0].y);
+    context.beginPath();
+    for (let i = 0; i < pos.length; i++) {
+        context.lineTo(pos[i].x, pos[i].y);
+    }
+    context.stroke();
+    // context.closePath();
+}
+
 class HeatRoad {
     constructor(paths, values) {
         this.maxValue = Math.max(...values);
